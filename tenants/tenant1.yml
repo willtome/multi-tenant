@@ -1,0 +1,4 @@
+---
+tenant_name: tenant1
+tenant_cloud_accts:
+tenant_vars:

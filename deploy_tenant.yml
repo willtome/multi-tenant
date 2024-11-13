@@ -1,0 +1,14 @@
+---
+- name: Deploy tenant from vars
+  hosts: localhost
+  vars:
+    tenant_org: Multi-Tenant
+    multi_org: false
+  vars_files:
+    - tenants/{{tenant_name}}.yml
+
+  tasks:
+    - name: Set Tenant Org
+    - name: Create Org
+    - name: Create Creds
+    - name: Create Inventory
