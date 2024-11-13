@@ -1,4 +1,9 @@
 ---
 tenant_name: tenant1
 tenant_cloud_accts:
+ - '1234'
 tenant_vars:
+  t_var1: somewhere
+  t_var2: over
+  t_var3: the
+  t_var4: rainbow

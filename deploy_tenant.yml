@@ -5,10 +5,45 @@
     tenant_org: Multi-Tenant
     multi_org: false
   vars_files:
-    - tenants/{{tenant_name}}.yml
+    - "tenants/{{tenant_name}}.yml"
 
   tasks:
     - name: Set Tenant Org
+      set_fact:
+        tenant_org: "{{ tenant_name }}"
+      when: multi_org
+
     - name: Create Org
+      ansible.platform.organization:
+        name: "{{ tenant_org }}"
+        state: present
+
     - name: Create Creds
+      ansible.controller.credential:
+        name: "{{ tenant_name }}-{{ item }}"
+        organization: "{{ tenant_org }}"
+        state: exists
+        credential_type: Amazon Web Services
+      loop: "{{ tenant_cloud_accts }}"
+      when: 
+        - tenant_cloud_accts is defined
+
     - name: Create Inventory
+      ansible.controller.inventory:
+        name: "{{ tenant_name }}"
+        organization: "{{ tenant_org }}"
+        state: present
+        variables: "{{ tenant_vars }}"
+
+    - name: Create Inventory Sources
+      ansible.controller.inventory_source:
+        name: "{{ tenant_name }}-{{ item }}"
+        organization: "{{ tenant_org }}"
+        inventory: "{{ tenant_name }}"
+        credential: "{{ tenant_name }}-{{ item }}"
+        source: ec2
+        overwrite: true
+        overwrite_vars: true
+      loop: "{{ tenant_cloud_accts }}"
+      when: 
+        - tenant_cloud_accts is defined
