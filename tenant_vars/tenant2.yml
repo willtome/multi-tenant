@@ -1,0 +1,7 @@
+---
+tenant_name: tenant2
+tenant_cloud_accts:
+  - 1234
+  - 5678
+tenant_vars:
+  t_var1: rocknroll

@@ -57,3 +57,9 @@ controller_credentials:
     credential_type: AAP Gateway
     organization: Default
     state: exists
+controller_projects:
+  - name: Multi-Tenant
+    organization: Default
+    scm_type: git
+    wait: true
+    scm_url: https://github.com/willtome/multi-tenant.git

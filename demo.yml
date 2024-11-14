@@ -1,4 +1,15 @@
 ---
+- name: Configure pre-req
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - common_vars/demo.yml
+  roles:
+    - infra.aap_configuration.controller_credential_types
+    - infra.aap_configuration.controller_credentials
+    - infra.aap_configuration.controller_projects
+    - infra.aap_configuration.controller_job_templates
+
 - ansible.builtin.import_playbook: deploy_jobs.yml
 - ansible.builtin.import_playbook: deploy_tenant.yml
   vars:
@@ -14,6 +25,3 @@
   roles:
     - infra.aap_configuration.gateway_users
     - infra.aap_configuration.controller_roles
-    - infra.aap_configuration.controller_credential_types
-    - infra.aap_configuration.controller_credentials
-    - infra.aap_configuration.controller_job_templates
