@@ -1,12 +1,13 @@
 ---
 - name: Deploy tenant from vars
   hosts: localhost
+  gather_facts: false
   vars:
     tenant_org: Multi-Tenant
     multi_org: false
   vars_files:
-    - commonjobs.yml
-    - "tenants/{{tenant_name}}.yml"
+    - common_vars/roles.yml
+    - "tenant_vars/{{tenant_name}}.yml"
 
   tasks:
     - name: Set Tenant Org
@@ -56,17 +57,21 @@
       when: 
         - tenant_cloud_accts is defined
 
-    - name: Assign inventory permissions
-      ansible.controller.role_team_assignment:
-        role_definition: Inventory Use
-        object_id: "{{ tenant_inventory.id }}"
-        team: "{{ tenant_name }} Users"
-        state: present
+    - name: Assign Roles
+      ansible.builtin.include_role:
+        name: infra.aap_configuration.controller_roles
 
-    - name: Assign credential permissions
-      ansible.controller.role_team_assignment:
-        role_definition: Credential Use
-        object_id: "{{ item.id }}"
-        team: "{{ tenant_name }} Users"
-        state: present
-      loop: "{{ tenant_creds.results }}"
+    #- name: Assign inventory permissions
+    #  ansible.controller.role_team_assignment:
+    #    role_definition: Inventory Use
+    #    object_id: "{{ tenant_inventory.id }}"
+    #    team: "{{ tenant_name }} Users"
+    #    state: present
+#
+    #- name: Assign credential permissions
+    #  ansible.controller.role_team_assignment:
+    #    role_definition: Credential Use
+    #    object_id: "{{ item.id }}"
+    #    team: "{{ tenant_name }} Users"
+    #    state: present
+    #  loop: "{{ tenant_creds.results }}"

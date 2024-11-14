@@ -1,0 +1,59 @@
+---
+aap_user_accounts:
+  - username: t1_u1
+    password: ansible123!
+    organization: Multi-Tenant
+controller_roles:
+  - user: t1_u1
+    target_team	: tenant1 Users
+    lookup_organization: Multi-Tenant
+    role: member
+controller_templates:
+  - name: Deploy Tenant
+    job_type: run
+    project: Multi-Tenant
+    playbook: deploy_tenant.yml
+    credentials:
+      - Controller Credential
+      - Gateway Credential
+    inventory: Demo Inventory
+    extra_vars:
+      multi_org: false
+    survey_enabled: true
+    survey:
+      name: ''
+      description: ''
+      spec:
+        - question_name: Tenant Name
+          type: text
+          variable: tenant_name
+          required: true
+controller_credential_types:
+  - name: AAP Gateway
+    kind: cloud
+    inputs:
+      fields:
+        - id: host
+          type: string
+          label: Gateway Hostname
+        - id: username
+          type: string
+          label: Gateway Username
+        - id: password
+          type: string
+          label: Gateway Password
+          secret: true
+      required:
+        - username
+        - password
+        - host
+    injectors:
+      env:
+        GATEWAY_HOSTNAME: "{% raw %}{  { host  }}{% endraw %}"
+        GATEWAY_USERNAME: "{% raw %}{  { username  }}{% endraw %}"
+        GATEWAY_PASSWORD: "{% raw %}{  { password  }}{% endraw %}"
+controller_credentials:
+  - name: Gateway Credential
+    credential_type: AAP Gateway
+    organization: Default
+    state: exists

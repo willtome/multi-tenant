@@ -1,0 +1,19 @@
+---
+controller_roles:
+- team: "{{ tenant_name}} Users"
+  lookup_organization: "{{ tenant_org }}"
+  credentials: "{{ [tenant_name] | product(tenant_cloud_accts) |map('join','-') | list }}"
+  inventory: "{{ tenant_name }}"
+  roles:
+   - read
+   - use
+
+- team: "{{ tenant_name}} Users"
+  #lookup_organization: "{{ tenant_org }}"
+  roles:
+    - read
+    - execute
+  job_templates:
+    - Data Refresh
+    - App Restart
+    - Enable Debug
